@@ -453,7 +453,5 @@ make test          # Запуск тестов
 
 ---
 
-## 👤 Автор
-
-**sauberr**
-📧 [sauberr10@gmail.com](mailto:sauberr10@gmail.com)
+## 📞 Контакты
+To contact the author of the project, write to email dmitriybirilko@gmail.com
