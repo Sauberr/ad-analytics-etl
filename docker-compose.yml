@@ -1,0 +1,53 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: salesbrush-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-salesbrush_test}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - etl-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: salesbrush-app
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-salesbrush_test}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      UPDATE_INTERVAL_MINUTES: ${UPDATE_INTERVAL_MINUTES:-30}
+      API_DAILY_LIMIT: ${API_DAILY_LIMIT:-100}
+      API_SAFETY_MARGIN: ${API_SAFETY_MARGIN:-0.2}
+    volumes:
+      - .:/app
+      - /app/.venv
+    working_dir: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - etl-network
+    stdin_open: true
+    tty: true
+
+networks:
+  etl-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

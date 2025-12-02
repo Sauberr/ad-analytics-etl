@@ -1,0 +1,53 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.7
+    hooks:
+      - id: ruff
+        args: [--fix]
+        name: Ruff Linter (auto-fix)
+        exclude: ^tests/
+      - id: ruff-format
+        name: Ruff Formatter
+        exclude: ^tests/
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.19.0
+    hooks:
+      - id: mypy
+        name: MyPy Type Checker
+        additional_dependencies:
+          - pydantic>=2.0
+          - pydantic-settings>=2.0
+          - sqlalchemy>=2.0
+          - types-sqlalchemy
+          - loguru
+          - apscheduler
+          - typer
+          - rich
+        args: [--config-file=pyproject.toml]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: Удаление пробелов в конце строк
+      - id: end-of-file-fixer
+        name: Проверка пустой строки в конце файла
+      - id: check-yaml
+        name: Проверка YAML файлов
+      - id: check-toml
+        name: Проверка TOML файлов
+      - id: check-json
+        name: Проверка JSON файлов
+      - id: check-added-large-files
+        name: Проверка больших файлов
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+        name: Проверка маркеров merge conflict
+      - id: check-case-conflict
+        name: Проверка конфликтов регистра имен файлов
+      - id: mixed-line-ending
+        name: Проверка смешанных окончаний строк
+        args: [--fix=lf]
+
+default_install_hook_types: [pre-commit, pre-push]
