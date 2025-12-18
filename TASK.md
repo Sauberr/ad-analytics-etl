@@ -113,7 +113,9 @@ Docker / улучшения
 Удачи! Мы оцениваем не «идеальный» результат, а умение самостоятельно организовать работу, мыслить критически и доводить задачу до конца.
 
 🗂 JSON-файлы
+
 fb_spend.json
+
 [
   {"date": "2025-06-04", "campaign_id": "CAMP-123", "spend": 37.50},
   {"date": "2025-06-04", "campaign_id": "CAMP-456", "spend": 19.90},
@@ -121,12 +123,14 @@ fb_spend.json
   {"date": "2025-06-05", "campaign_id": "CAMP-789", "spend": 11.00},
   {"date": "2025-06-06", "campaign_id": "CAMP-999", "spend":  5.25}
 ]
+
 network_conv.json
+
 [
   {"date": "2025-06-04", "campaign_id": "CAMP-123", "conversions": 14},
-  {"date": "2025-06-04", "campaign_id": "CAMP-456", "conversions":  3},
+  {"date": "2025-06-04", "campaign_id": "CAMP-456", "conversions": 3},
   {"date": "2025-06-05", "campaign_id": "CAMP-123", "conversions": 10},
-  {"date": "2025-06-05", "campaign_id": "CAMP-456", "conversions":  5},
-  {"date": "2025-06-06", "campaign_id": "CAMP-888", "conversions":  7}
+  {"date": "2025-06-05", "campaign_id": "CAMP-456", "conversions": 5},
+  {"date": "2025-06-06", "campaign_id": "CAMP-888", "conversions": 7}
 ]
 
