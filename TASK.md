@@ -1,118 +1,79 @@
-Мини-тестовое (расчёт CPA / синхронизация данных)
+Mini-Test Task (CPA calculation / data synchronization)
 
-1. Задание
-Скрипт run.py
+1. Assignment
+Script run.py
 
+Reads two JSON files.
 
-Читает два JSON-файла .
+Accepts parameters --start-date and --end-date (ISO format).
 
+Merges data by date + campaign_id.
 
-Принимает параметры --start-date и --end-date (формат ISO).
+Calculates CPA = spend / conversions
 
+if conversions == 0 → CPA = null.
 
-Объединяет данные по date + campaign_id.
+Writes the result directly to the daily_stats table (upsert) and optionally displays a brief summary in the console.
 
+Database
 
-Считает CPA = spend / conversions
+SQLite or PostgreSQL (Docker container).
 
+Table daily_stats(date, campaign_id, spend, conversions, cpa).
 
-если conversions == 0 → CPA = null.
+The script should perform an upsert (or describe the import command in the README).
 
+API Limits Accounting
 
-Записывает результат прямо в таблицу daily_stats (upsert) и по желанию выводит краткое резюме в консоль.
-База
+Assume the real API provides no more than 100 requests per day.
 
+Describe (and optionally implement) a simple "update several times per hour" strategy. It must be as frequent as possible, but under no circumstances should it hit the limits (always maintain a ~20% daily limit margin):
 
-SQLite или PostgreSQL (Docker-контейнер).
+scheduler (cron / APScheduler);
 
+checking "whether we have already loaded date X";
 
-Таблица daily_stats(date, campaign_id, spend, conversions, cpa).
+re-loading only those dates for which data is missing or was incomplete.
 
+Tests
 
-Скрипт должен делать upsert (или в README описать команду импорта).
-
-
-Учёт лимитов API
-
-
-Предположим, реальный API даёт не больше 100 запросов в сутки.
-
-
-Опишите (и при желании реализуйте) простую стратегию «обновление несколько раз в час.”. Надо так часто как можно, но чтобы ни в коем случае не упираться в лимиты ( был запас где-то 20% суточного лимита всегда :
-
-
-планировщик (cron / APScheduler);
-
-
-проверка «уже загружали ли мы дату X»;
-
-
-повторная загрузка только тех дат, по которым данных нет или они были неполными.
-
-
-Тесты
-
-
-pytest + хотя бы один unit-тест, проверяющий правильность расчёта CPA и слияния строк.
-
+pytest + at least one unit test verifying the correctness of CPA calculation and row merging.
 
 GitHub
 
+Minimum 3 meaningful commits.
 
-Минимум 3 осмысленных коммита.
+README with "how to launch in 3 minutes" instructions (venv / poetry / docker — your choice).
 
-
-README с инструкцией «как поднять за 3 минуты» (venv / poetry / docker — на ваш выбор).
-
-
-Опционально (даёт бонус при оценке)
-
+Optional (bonus for evaluation)
 
 Dockerfile + make run.
 
-
 mypy / ruff / pre-commit.
 
+Logging, retry logic for network errors.
 
-Логирование, retry-логика при ошибках сети.
+2. JSON Sources
+Create from the text below
 
+File | Description
+fb_spend.json | Facebook campaign spend
+network_conv.json | conversions from affiliate network
 
+3. Criteria (100 points)
+Block | Points
+Works end-to-end | 40
+Code cleanliness, types, logging | 20
+Tests (≥ 50% coverage) | 15
+README and quick start | 15
+Docker / improvements | 10
 
-2. JSON-исходники
-Создать из текста ниже
-Файл
-Описание
-fb_spend.json
-расходы Facebook-кампаний
-network_conv.json
-конверсии из партнёрской сети
+4. Submission
+Send a Pull Request within 5 calendar days.
+In the PR, add a short checklist of "what I would improve if I had an additional 2 days".
+Good luck! We evaluate not the "ideal" result, but the ability to independently organize work, think critically, and see the task through to the end.
 
-
-
-
-
-
-3. Критерии (100 баллов)
-Блок
-Баллы
-Работает end-to-end
-40
-Чистота кода, типы, логирование
-20
-Тесты (≥ 50 % покрытия)
-15
-README и быстрый старт
-15
-Docker / улучшения
-10
-
-
-4. Сдача
-Отправьте Pull-Request в течение 5 календарных дней.
-В PR добавьте короткий чек-лист «что бы я улучшил, будь ещё +2 дня».
-Удачи! Мы оцениваем не «идеальный» результат, а умение самостоятельно организовать работу, мыслить критически и доводить задачу до конца.
-
-🗂 JSON-файлы
+🗂 JSON Files
 
 fb_spend.json
 
@@ -121,7 +82,7 @@ fb_spend.json
   {"date": "2025-06-04", "campaign_id": "CAMP-456", "spend": 19.90},
   {"date": "2025-06-05", "campaign_id": "CAMP-123", "spend": 42.10},
   {"date": "2025-06-05", "campaign_id": "CAMP-789", "spend": 11.00},
-  {"date": "2025-06-06", "campaign_id": "CAMP-999", "spend":  5.25}
+  {"code": "2025-06-06", "campaign_id": "CAMP-999", "spend": 5.25}
 ]
 
 network_conv.json
@@ -133,4 +94,3 @@ network_conv.json
   {"date": "2025-06-05", "campaign_id": "CAMP-456", "conversions": 5},
   {"date": "2025-06-06", "campaign_id": "CAMP-888", "conversions": 7}
 ]
-
