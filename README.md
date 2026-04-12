@@ -1,312 +1,312 @@
-# 🚀 ETL Система для расчёта CPA (Cost Per Acquisition)
+# 🚀 ETL System for CPA (Cost Per Acquisition) Calculation
 
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-44%20passed-success.svg)](https://github.com/pytest-dev/pytest)
 [![Coverage](https://img.shields.io/badge/coverage-74%25-green.svg)](https://github.com/nedbat/coveragepy)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
 
-## 📋 Описание
+## 📋 Description
 
-ETL система для автоматической обработки данных о рекламных расходах и конверсиях с расчётом CPA (Cost Per Acquisition) и сохранением в PostgreSQL.
+ETL system for automated processing of advertising spend and conversion data, calculating CPA (Cost Per Acquisition) and saving results to PostgreSQL.
 
-### ✨ Основные возможности:
-- ✅ **ETL процесс**: Загрузка, трансформация и сохранение данных
-- ✅ **Расчёт CPA**: Автоматический расчёт стоимости привлечения клиента
-- ✅ **Планировщик**: Автоматическое обновление данных каждые 30 минут
-- ✅ **Rate Limiting**: Управление лимитами API (80 запросов/день с резервом 20%)
-- ✅ **Docker**: Полная контейнеризация приложения и БД
-- ✅ **Тестирование**: 44 теста с покрытием 74%
-- ✅ **Логирование**: Детальные логи всех операций (Loguru)
+### ✨ Key Features:
+- ✅ **ETL Process**: Extract, transform and load data
+- ✅ **CPA Calculation**: Automatic calculation of cost per acquisition
+- ✅ **Scheduler**: Automatic data updates every 30 minutes
+- ✅ **Rate Limiting**: API limit management (80 requests/day with 20% reserve)
+- ✅ **Docker**: Full containerization of the app and DB
+- ✅ **Testing**: 44 tests with 74% coverage
+- ✅ **Logging**: Detailed logs of all operations (Loguru)
 
 ---
 
-## ⚡ Быстрый старт
+## ⚡ Quick Start
 
 ### 🐳 Docker
 
-**Требования**: Docker и Docker Compose
+**Requirements**: Docker and Docker Compose
 
 ```bash
-# 1️⃣ Клонировать репозиторий
+# 1️⃣ Clone the repository
 git clone <repository-url>
 cd test-task-salesbrush
 
-# 2️⃣ Запустить всё одной командой
+# 2️⃣ Start everything with one command
 make docker-up
 
-# 3️⃣ Запустить тесты
+# 3️⃣ Run tests
 make docker-test
 
-# 4️⃣ Запустить ETL один раз
+# 4️⃣ Run ETL once
 make docker-run
 
-# 5️⃣ Запустить планировщик (Ctrl+C для остановки)
+# 5️⃣ Start the scheduler (Ctrl+C to stop)
 make docker-scheduler
 ```
 
 
 ---
 
-### 💻 Локальная установка с Poetry
+### 💻 Local Installation with Poetry
 
-**Требования**: Python 3.12+, Poetry, PostgreSQL
+**Requirements**: Python 3.12+, Poetry, PostgreSQL
 
 ```bash
-# 1️⃣ Клонировать репозиторий
+# 1️⃣ Clone the repository
 git clone <repository-url>
 cd test-task-salesbrush
 
-# 2️⃣ Установить Poetry (если нет)
+# 2️⃣ Install Poetry (if not installed)
 curl -sSL https://install.python-poetry.org | python3 -
 
-# 3️⃣ Установить зависимости
+# 3️⃣ Install dependencies
 make install
-# или
+# or
 poetry install
 
-# 4️⃣ Настроить PostgreSQL и создать .env
+# 4️⃣ Configure PostgreSQL and create .env
 cp .env.example .env
-# Отредактируйте .env с вашими настройками БД
+# Edit .env with your DB settings
 
-# 5️⃣ Запустить тесты
+# 5️⃣ Run tests
 make test
 
-# 6️⃣ Запустить ETL
+# 6️⃣ Run ETL
 make run
 
-# 7️⃣ Запустить планировщик
+# 7️⃣ Start the scheduler
 make scheduler
 ```
 
 ---
 
-### 🐍 Локальная установка с venv
+### 🐍 Local Installation with venv
 
-**Требования**: Python 3.12+, PostgreSQL
+**Requirements**: Python 3.12+, PostgreSQL
 
 ```bash
-# 1️⃣ Клонировать репозиторий
+# 1️⃣ Clone the repository
 git clone <repository-url>
 cd test-task-salesbrush
 
-# 2️⃣ Создать виртуальное окружение
+# 2️⃣ Create a virtual environment
 python3.12 -m venv .venv
 source .venv/bin/activate  # macOS/Linux
-# или
+# or
 .venv\Scripts\activate  # Windows
 
-# 3️⃣ Обновить pip и установить Poetry
+# 3️⃣ Upgrade pip and install Poetry
 pip install --upgrade pip
 pip install poetry
 
-# 4️⃣ Установить зависимости через Poetry
+# 4️⃣ Install dependencies via Poetry
 poetry install
 
-# 5️⃣ Настроить PostgreSQL и создать .env
+# 5️⃣ Configure PostgreSQL and create .env
 cp .env.example .env
-# Отредактируйте .env с вашими настройками БД
+# Edit .env with your DB settings
 
-# 6️⃣ Запустить тесты
+# 6️⃣ Run tests
 poetry run pytest
 
-# 7️⃣ Запустить ETL
+# 7️⃣ Run ETL
 poetry run python run.py
 
-# 8️⃣ Запустить планировщик
+# 8️⃣ Start the scheduler
 poetry run python run.py --scheduler
 ```
 
 ---
 
-## 🎯 Быстрое тестирование
+## 🎯 Quick Testing
 
 ### Docker
 
 ```bash
-# Полный цикл тестирования в Docker
-make docker-up              # Запустить контейнеры
-make docker-test            # Запустить все 44 теста
-make docker-run             # Разовая загрузка данных
-make docker-logs            # Посмотреть логи
+# Full testing cycle in Docker
+make docker-up              # Start containers
+make docker-test            # Run all 44 tests
+make docker-run             # One-time data load
+make docker-logs            # View logs
 
-# Проверить данные в БД
+# Check data in DB
 make docker-db-shell
-# В psql:
+# In psql:
 SELECT * FROM daily_stats ORDER BY date, campaign_id;
 \q
 ```
 
-### Локально
+### Locally
 
 ```bash
-# Полный цикл тестирования локально
-make test                   # Запустить тесты
-make test-coverage          # Тесты с отчётом покрытия
-make run                    # Разовая загрузка данных
-tail -f logs/etl.log        # Посмотреть логи
+# Full testing cycle locally
+make test                   # Run tests
+make test-coverage          # Tests with coverage report
+make run                    # One-time data load
+tail -f logs/etl.log        # View logs
 ```
 
 ---
 
-## 📚 Все команды Makefile
+## 📚 All Makefile Commands
 
-### 🐳 Docker команды
+### 🐳 Docker Commands
 
-| Команда | Описание |
-|---------|----------|
-| `make docker-up` | 🚀 Запустить контейнеры (app + postgres) |
-| `make docker-down` | ⛔ Остановить контейнеры |
-| `make docker-restart` | 🔄 Перезапустить контейнеры |
-| `make docker-build` | 🔨 Пересобрать Docker образы |
-| `make docker-clean` | 🗑️ Удалить контейнеры и volumes |
-| `make docker-test` | ✅ Запустить тесты в Docker |
-| `make docker-test-coverage` | 📊 ��есты с покрытием кода |
-| `make docker-run` | ▶️ Запустить ETL один раз |
-| `make docker-scheduler` | ⏰ Запустить планировщик (интерактивно) |
-| `make docker-shell` | 🖥️ Открыть bash в контейнере |
-| `make docker-db-shell` | 🗄️ Подключиться к PostgreSQL |
-| `make docker-logs` | 📝 Показать логи приложения |
+| Command | Description |
+|---------|-------------|
+| `make docker-up` | 🚀 Start containers (app + postgres) |
+| `make docker-down` | ⛔ Stop containers |
+| `make docker-restart` | 🔄 Restart containers |
+| `make docker-build` | 🔨 Rebuild Docker images |
+| `make docker-clean` | 🗑️ Remove containers and volumes |
+| `make docker-test` | ✅ Run tests in Docker |
+| `make docker-test-coverage` | 📊 Tests with code coverage |
+| `make docker-run` | ▶️ Run ETL once |
+| `make docker-scheduler` | ⏰ Start scheduler (interactive) |
+| `make docker-shell` | 🖥️ Open bash in container |
+| `make docker-db-shell` | 🗄️ Connect to PostgreSQL |
+| `make docker-logs` | 📝 Show application logs |
 
-### 💻 Локальные команды
+### 💻 Local Commands
 
-| Команда | Описание |
-|---------|----------|
-| `make install` | 📦 Установить зависимости (Poetry) |
-| `make test` | ✅ Запустить тесты |
-| `make test-verbose` | 📋 Тесты с подробным выводом |
-| `make test-coverage` | 📊 Тесты + HTML отчёт покрытия |
-| `make run` | ▶️ Запустить ETL один раз |
-| `make scheduler` | ⏰ Запустить планировщик |
-| `make format` | ✨ Автоформатирование кода (ruff) |
-| `make lint` | 🔍 Проверка стиля кода |
-| `make typecheck` | 🔎 Проверка типов (mypy) |
-| `make clean` | 🗑️ Очистить кеш и временные файлы |
+| Command | Description |
+|---------|-------------|
+| `make install` | 📦 Install dependencies (Poetry) |
+| `make test` | ✅ Run tests |
+| `make test-verbose` | 📋 Tests with verbose output |
+| `make test-coverage` | 📊 Tests + HTML coverage report |
+| `make run` | ▶️ Run ETL once |
+| `make scheduler` | ⏰ Start scheduler |
+| `make format` | ✨ Auto-format code (ruff) |
+| `make lint` | 🔍 Check code style |
+| `make typecheck` | 🔎 Type checking (mypy) |
+| `make clean` | 🗑️ Clean cache and temp files |
 
 ---
 
-## 🎮 Режимы работы
+## 🎮 Operating Modes
 
-### 1️⃣ Разовая загрузка всех данных
+### 1️⃣ One-time load of all data
 
 ```bash
 # Docker
 make docker-run
 
-# Локально
+# Locally
 poetry run python run.py
 ```
 
-**Результат**: Загружает все данные из `data/`, рассчитывает CPA, сохраняет в БД.
+**Result**: Loads all data from `data/`, calculates CPA, saves to DB.
 
 ---
 
-### 2️⃣ Загрузка за конкретный период
+### 2️⃣ Load for a specific period
 
 ```bash
 # Docker
 docker exec salesbrush-app poetry run python run.py --start-date 2025-06-04 --end-date 2025-06-05
 
-# Локально
+# Locally
 poetry run python run.py --start-date 2025-06-04 --end-date 2025-06-05
 ```
 
-**Результат**: Фильтрует данные по датам перед сохранением.
+**Result**: Filters data by date before saving.
 
 ---
 
-### 3️⃣ Планировщик (автоматическое обновление)
+### 3️⃣ Scheduler (automatic updates)
 
 ```bash
-# Docker (интерактивно)
+# Docker (interactive)
 make docker-scheduler
 
-# Локально
+# Locally
 poetry run python run.py --scheduler
 ```
 
-**Что делает планировщик:**
-- ⏰ Обновляет данные каждые 30 минут (настраивается)
-- 📅 Проверяет последние 7 дней на отсутствующие данные
-- 🚦 Соблюдает лимиты API: макс. 80 запросов/день (20% резерв)
-- 🔄 Автоматически пропускает обновление при достижении лимита
-- 📝 Логирует все операции
+**What the scheduler does:**
+- ⏰ Updates data every 30 minutes (configurable)
+- 📅 Checks the last 7 days for missing data
+- 🚦 Respects API limits: max 80 requests/day (20% reserve)
+- 🔄 Automatically skips update when limit is reached
+- 📝 Logs all operations
 
-**Остановка**: Нажмите `Ctrl+C`
+**Stop**: Press `Ctrl+C`
 
 ---
 
-## ⚙️ Конфигурация
+## ⚙️ Configuration
 
-### Файл .env
+### .env File
 
 ```bash
-# База данных
+# Database
 POSTGRES_DB=salesbrush_test
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-POSTGRES_HOST=localhost        # или 'postgres' в Docker
+POSTGRES_HOST=localhost        # or 'postgres' in Docker
 POSTGRES_PORT=5432
 
-# API лимиты
-API_DAILY_LIMIT=100            # Максимум запросов в день
-API_SAFETY_MARGIN=0.2          # Резерв безопасности (20%)
+# API limits
+API_DAILY_LIMIT=100            # Maximum requests per day
+API_SAFETY_MARGIN=0.2          # Safety reserve (20%)
 
-# Планировщик
-UPDATE_INTERVAL_MINUTES=30     # Интервал обновления данных
-MAX_RETRIES=3                  # Попыток при ошибке
-RETRY_DELAY_SECONDS=60         # Задержка между попытками
+# Scheduler
+UPDATE_INTERVAL_MINUTES=30     # Data update interval
+MAX_RETRIES=3                  # Retries on error
+RETRY_DELAY_SECONDS=60         # Delay between retries
 ```
 
-**Примечания:**
-- В Docker используйте `POSTGRES_HOST=postgres` (имя сервиса)
-- Локально используйте `POSTGRES_HOST=localhost`
-- Эффективный лимит API = 100 * (1 - 0.2) = 80 запросов/день
+**Notes:**
+- In Docker use `POSTGRES_HOST=postgres` (service name)
+- Locally use `POSTGRES_HOST=localhost`
+- Effective API limit = 100 * (1 - 0.2) = 80 requests/day
 
 ---
 
-## 🧪 Тестирование
+## 🧪 Testing
 
-### Запуск всех тестов
+### Run all tests
 
 ```bash
 # Docker
 make docker-test
 
-# Локально
+# Locally
 make test
 ```
 
-### С покрытием кода
+### With code coverage
 
 ```bash
 # Docker
 make docker-test-coverage
 
-# Локально
+# Locally
 make test-coverage
-# Откройте htmlcov/index.html в браузере
+# Open htmlcov/index.html in your browser
 ```
 
-### Структура тестов
+### Test structure
 
 ```
 tests/
-├── test_calculator.py        # 12 тестов - расчёт CPA, слияние данных
-├── test_data_loader.py        # 7 тестов - загрузка JSON
-├── test_etl_service.py        # 7 тестов - ETL процесс
-├── test_etl_integration.py    # 3 теста - интеграционные
-├── test_rate_limiter.py       # 8 тестов - лимиты API
-└── test_schemas.py            # 7 тестов - Pydantic валидация
+├── test_calculator.py        # 12 tests - CPA calculation, data merging
+├── test_data_loader.py        # 7 tests - JSON loading
+├── test_etl_service.py        # 7 tests - ETL process
+├── test_etl_integration.py    # 3 tests - integration tests
+├── test_rate_limiter.py       # 8 tests - API limits
+└── test_schemas.py            # 7 tests - Pydantic validation
 ```
 
-**Итого: 44 теста | Покрытие: 74% | Минимум требуется: 70%** ✅
+**Total: 44 tests | Coverage: 74% | Minimum required: 70%** ✅
 
 ---
 
 
-## 📊 Пример работы
+## 📊 Example Output
 
-### Входные данные
+### Input Data
 
 **data/fb_spend.json**:
 ```json
@@ -324,21 +324,21 @@ tests/
 ]
 ```
 
-### Вывод программы
+### Program Output
 
 ```
 ================================================================================
-📊 РЕЗЮМЕ ОБРАБОТКИ ДАННЫХ
+📊 DATA PROCESSING SUMMARY
 ================================================================================
 
-✅ Обработано записей: 2
-💰 Общие расходы: $57.40
-🎯 Общие конверсии: 17
-📈 Записей с CPA: 2
-💵 Средний CPA: $4.66
+✅ Records processed: 2
+💰 Total spend: $57.40
+🎯 Total conversions: 17
+📈 Records with CPA: 2
+💵 Average CPA: $4.66
 
 --------------------------------------------------------------------------------
-Дата         Campaign ID     Spend        Conv     CPA
+Date         Campaign ID     Spend        Conv     CPA
 --------------------------------------------------------------------------------
 2025-06-04 CAMP-123        $37.50       14       $2.68
 2025-06-04 CAMP-456        $19.90       3        $6.63
@@ -348,119 +348,119 @@ tests/
 
 ---
 
-## 📝 Логирование
+## 📝 Logging
 
-Все операции логируются в `logs/etl.log` с ротацией файлов.
+All operations are logged to `logs/etl.log` with file rotation.
 
 ```bash
-# Просмотр логов
+# View logs
 tail -f logs/etl.log
 
-# В Docker
+# In Docker
 make docker-logs
-# или
+# or
 docker logs -f salesbrush-app
 ```
 
-**Формат логов**: `YYYY-MM-DD HH:MM:SS | LEVEL | module:function - Message`
+**Log format**: `YYYY-MM-DD HH:MM:SS | LEVEL | module:function - Message`
 
 ---
 
-## 🏗️ Архитектура проекта
+## 🏗️ Project Architecture
 
 ```
 src/
-├── database/              # 🗄️ SQLAlchemy ORM и подключение к БД
-│   ├── db.py             # Database класс, сессии
-│   └── models.py         # Модель DailyStats
-├── schemas/              # ✅ Pydantic схемы валидации
-│   ├── spend.py          # Схема расходов
-│   ├── conversion.py     # Схема конверсий
-│   └── merged.py         # Схема объединённых данных
-├── services/             # 🔧 Бизнес-логика
-│   ├── calculator.py     # Калькулятор CPA и слияние данных
-│   ├── data_loader.py    # Загрузка JSON файлов
-│   ├── etl_service.py    # Основной ETL процесс
-│   ├── rate_limiter.py   # Rate limiting для API
-│   └── scheduler.py      # Планировщик (APScheduler)
-├── settings/             # ⚙️ Конфигурация (Pydantic Settings)
-│   ├── api.py            # Настройки API лимитов
-│   ├── database.py       # Настройки PostgreSQL
-│   └── scheduler.py      # Настройки планировщика
-└── utils/                # 🛠️ Утилиты
-    └── logger.py         # Настройка Loguru
+├── database/              # 🗄️ SQLAlchemy ORM and DB connection
+│   ├── db.py             # Database class, sessions
+│   └── models.py         # DailyStats model
+├── schemas/              # ✅ Pydantic validation schemas
+│   ├── spend.py          # Spend schema
+│   ├── conversion.py     # Conversion schema
+│   └── merged.py         # Merged data schema
+├── services/             # 🔧 Business logic
+│   ├── calculator.py     # CPA calculator and data merging
+│   ├── data_loader.py    # JSON file loading
+│   ├── etl_service.py    # Main ETL process
+│   ├── rate_limiter.py   # Rate limiting for API
+│   └── scheduler.py      # Scheduler (APScheduler)
+├── settings/             # ⚙️ Configuration (Pydantic Settings)
+│   ├── api.py            # API limit settings
+│   ├── database.py       # PostgreSQL settings
+│   └── scheduler.py      # Scheduler settings
+└── utils/                # 🛠️ Utilities
+    └── logger.py         # Loguru setup
 ```
 
 ---
 
-## 🔧 Разработка
+## 🔧 Development
 
-### Установка pre-commit хуков
+### Install pre-commit hooks
 
 ```bash
 make pre-commit-install
 ```
 
-### Проверка кода перед коммитом
+### Check code before committing
 
 ```bash
-make format        # Автоформатирование (ruff)
-make lint          # Проверка стиля
-make typecheck     # Проверка типов (mypy)
-make test          # Запуск тестов
+make format        # Auto-format (ruff)
+make lint          # Style check
+make typecheck     # Type checking (mypy)
+make test          # Run tests
 ```
 
-### Workflow разработки
+### Development Workflow
 
-1. **Внесите изменения в код**
-2. **Запустите проверки**:
+1. **Make your code changes**
+2. **Run checks**:
    ```bash
    make format && make lint && make typecheck && make test
    ```
-3. **Протестируйте в Docker**:
+3. **Test in Docker**:
    ```bash
    make docker-build && make docker-test
    ```
-4. **Закоммитьте изменения**
+4. **Commit your changes**
 
 ---
 
-## 📦 Зависимости
+## 📦 Dependencies
 
-### Основные
+### Main
 
 - **Python 3.12+**
-- **SQLAlchemy 2.0+** - ORM для PostgreSQL
-- **Pydantic 2.0+** - Валидация данных и настроек
-- **APScheduler 3.11+** - Планировщик задач
-- **Loguru** - Удобное логирование
-- **Typer** - CLI интерфейс
-- **psycopg2-binary** - PostgreSQL драйвер
+- **SQLAlchemy 2.0+** - ORM for PostgreSQL
+- **Pydantic 2.0+** - Data and settings validation
+- **APScheduler 3.11+** - Task scheduler
+- **Loguru** - Convenient logging
+- **Typer** - CLI interface
+- **psycopg2-binary** - PostgreSQL driver
 
-### Для разработки
+### Development
 
-- **pytest** - Фреймворк тестирования
-- **pytest-cov** - Покрытие кода
-- **ruff** - Быстрый линтер и форматтер
-- **mypy** - Проверка типов
-- **pre-commit** - Git хуки
+- **pytest** - Testing framework
+- **pytest-cov** - Code coverage
+- **ruff** - Fast linter and formatter
+- **mypy** - Type checking
+- **pre-commit** - Git hooks
 
-## 🚀 Что бы я улучшил за +2 дня
+## 🚀 What I Would Improve With +2 Days
 
-- Асинхронность: Переписать ETL на asyncio + httpx для параллельной загрузки данных
-- Очередь задач: Добавить Celery + Redis для обработки больших объёмов данных
-- Кеширование: Redis для кеширования промежуточных результатов и ускорения повторных запросов
-- Миграции БД: Alembic для версионирования схемы базы данных
-- Метрики: Prometheus + Grafana для мониторинга производительности и бизнес-метрик
-- Экспорт данных: Автоматическая генерация CSV/Excel отчётов по расписанию
-
----
-
-## 📄 Лицензия
-
-Этот проект лицензирован под [MIT License](LICENSE).
+- Async: Rewrite ETL with asyncio + httpx for parallel data loading
+- Task queue: Add Celery + Redis for processing large data volumes
+- Caching: Redis for caching intermediate results and speeding up repeated requests
+- DB migrations: Alembic for versioning the database schema
+- Metrics: Prometheus + Grafana for performance and business metrics monitoring
+- Data export: Automatic generation of CSV/Excel reports on schedule
 
 ---
 
-## 📞 Контакты
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 📞 Contacts
 To contact the author of the project, write to email dmitriybirilko@gmail.com
